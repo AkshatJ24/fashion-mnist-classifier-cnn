@@ -8,7 +8,7 @@ A full-stack AI application that classifies clothing images in real-time. Built 
 ![Flask](https://img.shields.io/badge/Backend-Flask-green)
 
 ## 🚀 Live Demo
-[Link to your Vercel App will go here]
+https://fashion-mnist-classifier-cnn.vercel.app/
 
 ## 💡 Key Features
 * **Custom CNN Architecture:** Trained on the Fashion MNIST dataset (60,000 images) using Conv2D, MaxPooling, and Dropout layers.
