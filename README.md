@@ -20,7 +20,7 @@ https://fashion-mnist-classifier-cnn.vercel.app/
 * **Training:** Python, TensorFlow, Keras
 * **Inference:** ONNX Runtime (CPU optimized)
 * **Backend:** Flask (Python)
-* **Frontend:** HTML5, CSS3, JavaScript
+* **Frontend:** HTML5, CSS3
 
 ## 📂 Project Structure
 ```text
