@@ -1,0 +1,4 @@
+Flask
+onnxruntime
+Pillow
+numpy<2.0

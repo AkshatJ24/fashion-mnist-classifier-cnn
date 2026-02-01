@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion AI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 350px;
+        }
+        h1 { margin-bottom: 20px; font-size: 24px; color: #fff; }
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .btn {
+            border: 2px solid #333;
+            color: gray;
+            background-color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+        button.predict-btn {
+            background: #0070f3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        button.predict-btn:hover { background: #0051a2; }
+        #result {
+            margin-top: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            min-height: 30px;
+        }
+        .success { color: #00ff88; }
+        .error { color: #ff4444; }
+        
+        /* Preview Image */
+        #preview {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border: 2px dashed #444;
+            margin: 20px auto;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👕 Fashion Classifier</h1>
+        <p style="color: #aaa; font-size: 0.9em;">Upload an image of clothing</p>
+        
+        <div class="upload-btn-wrapper">
+            <button class="btn">Choose File</button>
+            <input type="file" id="imageInput" accept="image/*" onchange="showPreview(this)">
+        </div>
+
+        <img id="preview" />
+
+        <button class="predict-btn" onclick="predict()">Identify Item</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function showPreview(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('preview').style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function predict() {
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+            const resultDiv = document.getElementById('result');
+
+            if (!file) {
+                resultDiv.innerText = "⚠️ Please select an image first.";
+                resultDiv.className = "error";
+                return;
+            }
+
+            resultDiv.innerText = "Thinking...";
+            resultDiv.className = "";
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    resultDiv.innerText = "Error: " + data.error;
+                    resultDiv.className = "error";
+                } else {
+                    resultDiv.innerHTML = `It's a <span class="success">${data.class}</span><br><span style="font-size:0.8em; color:#666">Confidence: ${data.confidence}</span>`;
+                }
+            } catch (err) {
+                resultDiv.innerText = "Failed to connect to server.";
+                resultDiv.className = "error";
+            }
+        }
+    </script>
+</body>
+</html>

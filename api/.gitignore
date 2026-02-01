@@ -1,0 +1,15 @@
+# Ignore the virtual environment
+venv/
+env/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore the heavy raw model folder (we only need the .onnx file)
+final_model_export/
+tf_saved_model_dir/
+logs/
+
+# Ignore Mac system files
+.DS_Store
